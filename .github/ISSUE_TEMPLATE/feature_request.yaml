@@ -1,0 +1,58 @@
+name: 'Feature request'
+description: 'Suggest an improvement or new feature for the Admin Client'
+title: '[Feature]: '
+labels:
+    - enhancement
+body:
+    - type: markdown
+      attributes:
+          value: |
+              Thanks for suggesting a feature for the `dnd-mapp/admin-client` (Admin Client / Admin UI).
+
+              Please make sure your interactions follow our [Code of Conduct](https://github.com/dnd-mapp/admin-client/blob/main/CODE_OF_CONDUCT.md).
+    - type: checkboxes
+      id: checklist
+      attributes:
+          label: Pre-checks
+          description: 'Please confirm you have done the following:'
+          options:
+              - label: I have searched existing issues to make sure this feature has not already been requested.
+                required: true
+    - type: textarea
+      id: problem
+      attributes:
+          label: Is your feature request related to a problem?
+          description: |
+              Describe the problem you're trying to solve for administrators or platform operators.
+              If it's not problem-related, you can also just explain the use case.
+          placeholder: |
+              I'm trying to do X in the Admin Client, but Y is hard/confusing/missing...
+      validations:
+          required: true
+    - type: textarea
+      id: proposed_solution
+      attributes:
+          label: Describe the solution you'd like
+          description: How would you like the Admin Client to behave or what should be added/changed?
+          placeholder: |
+              It would be helpful if the Admin Client included...
+              I would like to have a screen/section for...
+      validations:
+          required: true
+    - type: textarea
+      id: alternatives
+      attributes:
+          label: Describe alternatives you've considered
+          description: |
+              Have you tried any workarounds or other tools/approaches?
+              Why are they not ideal?
+          placeholder: |
+              I tried doing ... manually, but...
+      validations:
+          required: false
+    - type: textarea
+      id: additional_context
+      attributes:
+          label: Additional context
+          description: |
+              Any extra details, diagrams, or examples that make the request clearer.

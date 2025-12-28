@@ -1,0 +1,45 @@
+/* To learn more about Typescript configuration file: https://www.typescriptlang.org/docs/handbook/tsconfig-json.html. */
+/* To learn more about Angular compiler options: https://angular.dev/reference/configs/angular-compiler-options. */
+{
+    "references": [{ "path": "./tsconfig.app.json" }, { "path": "./tsconfig.spec.json" }],
+    "files": [],
+    "compileOnSave": false,
+    "compilerOptions": {
+        "baseUrl": ".",
+        "experimentalDecorators": true,
+        "forceConsistentCasingInFileNames": true,
+        "importHelpers": true,
+        "isolatedModules": true,
+        "lib": ["ES2024", "DOM"],
+        "module": "preserve",
+        "noImplicitAny": true,
+        "noImplicitOverride": true,
+        "noImplicitReturns": true,
+        "noImplicitThis": true,
+        "noUncheckedIndexedAccess": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "noPropertyAccessFromIndexSignature": true,
+        "noFallthroughCasesInSwitch": true,
+        "paths": {
+            "@/test": ["./test/index.ts"]
+        },
+        "rootDir": ".",
+        "skipLibCheck": true,
+        "strictBindCallApply": true,
+        "strictBuiltinIteratorReturn": true,
+        "strictFunctionTypes": true,
+        "strictNullChecks": true,
+        "strictPropertyInitialization": true,
+        "target": "ES2024",
+        "useDefineForClassFields": true,
+        "useUnknownInCatchVariables": true
+    },
+    "angularCompilerOptions": {
+        "enableI18nLegacyMessageIdFormat": false,
+        "strictInjectionParameters": true,
+        "strictInputAccessModifiers": true,
+        "strictStandalone": true,
+        "strictTemplates": true
+    }
+}

@@ -1,0 +1,70 @@
+name: Bump version
+on:
+    workflow_dispatch:
+        inputs:
+            version:
+                description: What version to release
+                required: true
+                type: choice
+                options:
+                    - major
+                    - minor
+                    - patch
+permissions:
+    contents: write
+    pull-requests: write
+concurrency:
+    group: ${{ github.workflow }}-${{ github.ref }}
+    cancel-in-progress: false
+jobs:
+    bump-version:
+        name: Bump version
+        runs-on: ubuntu-22.04
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+
+            - name: Setup GitHub App
+              id: gh-app
+              uses: ./.github/actions/auth-gh-app
+              with:
+                  app-id: ${{ secrets.AUTH_APP_ID }}
+                  private-key: ${{ secrets.AUTH_APP_PRIVATE_KEY }}
+
+            - name: Setup tools
+              uses: ./.github/actions/setup-tools
+              with:
+                  install-dependencies: false
+
+            - name: Bump version
+              shell: bash
+              id: bump-version
+              env:
+                  VERSION: ${{ inputs.version }}
+                  GITHUB_TOKEN: ${{ steps.gh-app.outputs.token }}
+                  GITHUB_APP_USERNAME: ${{ steps.gh-app.outputs.gh-app-username }}
+                  GITHUB_APP_EMAIL: ${{ steps.gh-app.outputs.gh-app-email }}
+              run: |
+                  set -euo pipefail
+
+                  git config user.name "$GITHUB_APP_USERNAME"
+                  git config user.email "$GITHUB_APP_EMAIL"
+                  git config push.autoSetupRemote "true"
+
+                  NEXT="$(pnpm version "$VERSION" --no-git-tag-version)"
+
+                  pnpm gen:version
+                  pnpm release:update-changelog
+
+                  echo "next=$NEXT" >> "$GITHUB_OUTPUT"
+
+            - name: Create PR
+              uses: peter-evans/create-pull-request@98357b18bf14b5342f975ff684046ec3b2a07725 # v8.0.0
+              with:
+                  token: '${{ steps.gh-app.outputs.token }}'
+                  author: '${{ steps.gh-app.outputs.gh-app-username }} <${{ steps.gh-app.outputs.gh-app-email}}>'
+                  branch: 'release/${{ steps.bump-version.outputs.next }}'
+                  commit-message: 'Release ${{ steps.bump-version.outputs.next }}'
+                  title: 'Release ${{ steps.bump-version.outputs.next }}'
+                  body: 'Release ${{ steps.bump-version.outputs.next }}'
+                  sign-commits: 'true'

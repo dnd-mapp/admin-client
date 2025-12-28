@@ -1,0 +1,31 @@
+{
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "prettier.prettier-vscode",
+
+    "[typescript]": {
+        "editor.defaultFormatter": "prettier.prettier-vscode"
+    },
+    "[typescriptreact]": {
+        "editor.defaultFormatter": "prettier.prettier-vscode"
+    },
+    "[javascript]": {
+        "editor.defaultFormatter": "prettier.prettier-vscode"
+    },
+    "[html]": {
+        "editor.defaultFormatter": "prettier.prettier-vscode"
+    },
+    "[css]": {
+        "editor.defaultFormatter": "prettier.prettier-vscode"
+    },
+    "[scss]": {
+        "editor.defaultFormatter": "prettier.prettier-vscode"
+    },
+
+    "eslint.enable": true,
+    "eslint.run": "onType",
+    "eslint.validate": ["javascript", "typescript", "html"],
+    "eslint.workingDirectories": [{ "mode": "auto" }],
+
+    "stylelint.enable": true,
+    "stylelint.validate": ["css", "scss"]
+}

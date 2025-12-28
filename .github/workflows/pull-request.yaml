@@ -1,0 +1,50 @@
+name: CI - PR
+on:
+    pull_request:
+permissions:
+    contents: read
+concurrency:
+    group: ${{ github.workflow }}-${{ github.ref }}
+    cancel-in-progress: true
+jobs:
+    ci:
+        name: CI
+        runs-on: ubuntu-22.04
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+
+            - name: CI
+              uses: ./.github/actions/ci
+    docker-build:
+        name: Create Docker image
+        runs-on: ubuntu-22.04
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+
+            - name: Docker metadata
+              id: metadata
+              uses: docker/metadata-action@c299e40c65443455700f0fdfc63efafe5b349051 # v5.10.0
+              with:
+                  tags: |
+                      type=ref,event=pr
+
+            - name: Create Docker image
+              uses: ./.github/actions/docker-build
+              with:
+                  docker-username: ${{ secrets.DOCKER_USERNAME }}
+                  docker-password: ${{ secrets.DOCKER_PASSWORD }}
+                  docker-image-name: admin-client
+                  docker-image-tags: ${{ join(fromJSON(steps.metadata.outputs.json).tag-names, ',') }}
+    e2e:
+        name: E2E testing (Smoke)
+        runs-on: ubuntu-22.04
+        needs:
+            - docker-build
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+
+            - name: Run smoke tests
+              uses: ./.github/actions/e2e-tests

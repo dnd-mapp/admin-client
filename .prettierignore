@@ -1,0 +1,29 @@
+*
+
+!*/
+
+!*.json
+!*.yaml
+!*.html
+!*.scss
+!*.ts
+!*.tsx
+!*.[cm]ts
+!*.js
+!*.jsx
+!*.[cm]js
+
+# Specific Files
+
+!.prettierrc
+
+pnpm-lock.yaml
+
+
+# Specific Folders
+
+node_modules/
+
+.angular/
+dist/
+reports/

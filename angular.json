@@ -1,0 +1,109 @@
+{
+    "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+    "version": 1,
+    "cli": {
+        "analytics": false,
+        "packageManager": "pnpm",
+        "schematicCollections": ["angular-eslint"]
+    },
+    "schematics": {
+        "@schematics/angular:component": {
+            "addTypeToClassName": true,
+            "changeDetection": "OnPush",
+            "style": "scss",
+            "type": "component"
+        },
+        "@schematics/angular:directive": {
+            "addTypeToClassName": true,
+            "type": "directive"
+        },
+        "@schematics/angular:service": {
+            "addTypeToClassName": true,
+            "type": "service"
+        },
+        "@schematics/angular:guard": {
+            "typeSeparator": "."
+        },
+        "@schematics/angular:interceptor": {
+            "typeSeparator": "."
+        },
+        "@schematics/angular:module": {
+            "typeSeparator": "."
+        },
+        "@schematics/angular:pipe": {
+            "typeSeparator": "."
+        },
+        "@schematics/angular:resolver": {
+            "typeSeparator": "."
+        }
+    },
+    "projects": {
+        "admin-client": {
+            "projectType": "application",
+            "root": "",
+            "sourceRoot": "src",
+            "prefix": "dma",
+            "architect": {
+                "build": {
+                    "builder": "@angular/build:application",
+                    "options": {
+                        "assets": [
+                            {
+                                "glob": "**/*",
+                                "input": "public"
+                            }
+                        ],
+                        "browser": "src/main.ts",
+                        "inlineStyleLanguage": "scss",
+                        "styles": ["src/styles.scss"],
+                        "tsConfig": "tsconfig.app.json"
+                    },
+                    "defaultConfiguration": "production",
+                    "configurations": {
+                        "production": {
+                            "budgets": [
+                                {
+                                    "type": "initial",
+                                    "maximumWarning": "500kB",
+                                    "maximumError": "1MB"
+                                },
+                                {
+                                    "type": "anyComponentStyle",
+                                    "maximumWarning": "4kB",
+                                    "maximumError": "8kB"
+                                }
+                            ]
+                        },
+                        "development": {
+                            "extractLicenses": false,
+                            "optimization": false,
+                            "sourceMap": true
+                        }
+                    }
+                },
+                "serve": {
+                    "builder": "@angular/build:dev-server",
+                    "options": {
+                        "buildTarget": "admin-client:build:development"
+                    },
+                    "defaultConfiguration": "https",
+                    "configurations": {
+                        "https": {
+                            "host": "localhost.admin.dndmapp.dev",
+                            "ssl": true,
+                            "sslCert": "cert.pem",
+                            "sslKey": "cert-key.pem"
+                        },
+                        "http": {}
+                    }
+                },
+                "lint": {
+                    "builder": "@angular-eslint/builder:lint",
+                    "options": {
+                        "lintFilePatterns": ["src/**/*.ts", "src/**/*.html"]
+                    }
+                }
+            }
+        }
+    }
+}

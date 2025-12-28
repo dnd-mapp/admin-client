@@ -1,0 +1,74 @@
+name: Release
+on:
+    repository_dispatch:
+        types:
+            - create-release
+permissions:
+    contents: write
+jobs:
+    release:
+        name: Release
+        runs-on: ubuntu-22.04
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+
+            - name: Prepare tags
+              shell: bash
+              id: prepare-tags
+              env:
+                  BRANCH: ${{ github.event.client_payload.branch }}
+              run: |
+                  set -euo pipefail
+
+                  VERSION="${BRANCH#release/}"
+
+                  CORE="${VERSION#v}"
+                  CORE="${CORE%%-*}"
+
+                  IFS='.' read -r MAJOR MINOR PATCH <<< "$CORE"
+
+                  TAGS="latest,$CORE,$MAJOR.$MINOR,$MAJOR"
+
+                  echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+                  echo "tags=$TAGS" >> "$GITHUB_OUTPUT"
+
+            - name: Extract changelog section
+              id: changelog
+              shell: bash
+              env:
+                  CORE: ${{ steps.prepare-tags.outputs.core }}
+              run: |
+                  set -euo pipefail
+
+                  # Capture section to a variable
+                  NOTES="$(pnpm changelog:extract 2>/dev/null || true)"
+
+                  if [ -z "$NOTES" ]; then
+                    echo "No changelog section found for version $CORE" >&2
+                    NOTES="Release $CORE"
+                  fi
+
+                  # Escape for GitHub output
+                  NOTES="${NOTES//'%'/'%25'}"
+                  NOTES="${NOTES//$'\n'/'%0A'}"
+                  NOTES="${NOTES//$'\r'/'%0D'}"
+
+                  echo "notes=$NOTES" >> "$GITHUB_OUTPUT"
+
+            - name: Create Docker image
+              uses: ./.github/actions/docker-build
+              with:
+                  docker-username: ${{ secrets.DOCKER_USERNAME }}
+                  docker-password: ${{ secrets.DOCKER_PASSWORD }}
+                  docker-image-name: admin-client
+                  docker-image-tags: ${{ steps.prepare-tags.outputs.tags }}
+
+            - name: Release
+              uses: softprops/action-gh-release@a06a81a03ee405af7f2048a818ed3f03bbf83c7b # v2.5.0
+              with:
+                  repository: dnd-mapp/admin-client
+                  tag_name: ${{ steps.prepare-tags.outputs.version }}
+                  prerelease: false
+                  make_latest: true
+                  body: ${{ steps.changelog.outputs.notes }}

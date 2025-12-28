@@ -1,0 +1,13 @@
+name: admin-client
+services:
+    admin-client:
+        image: dndmapp/admin-client
+        build:
+            context: ..
+            dockerfile: .docker/Dockerfile
+            tags:
+                - dndmapp/admin-client:local
+        container_name: admin-client
+        restart: on-failure
+        ports:
+            - '4200:8080/tcp'

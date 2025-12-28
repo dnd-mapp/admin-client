@@ -1,0 +1,46 @@
+name: Nightly
+on:
+    workflow_dispatch:
+    schedule:
+        - cron: '0 2 * * *'
+permissions:
+    contents: read
+jobs:
+    pre-nightly:
+        name: Pre Nightly
+        runs-on: ubuntu-22.04
+        outputs:
+            changed: ${{ steps.check-changes.outputs.changed == 'true' }}
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+
+            - name: Check if changed last 24 hours
+              id: check-changes
+              shell: bash
+              run: |
+                  SINCE="$(date -u -d '24 hours ago' --iso-8601=seconds)"
+
+                  echo "Checking for commits since: \"$SINCE\""
+
+                  if git log --since="$SINCE" --oneline HEAD | grep .; then
+                      echo "Changes detected in the last 24 hours."
+                      echo "changed=true" >> "$GITHUB_OUTPUT"
+                  else
+                      echo "No Changes detected in the last 24 hours."
+                      echo "changed=false" >> "$GITHUB_OUTPUT"
+                  fi
+    nightly:
+        name: Nightly
+        runs-on: ubuntu-22.04
+        needs:
+            - pre-nightly
+        if: ${{ needs.pre-nightly.outputs.changed }}
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+
+            - name: Run regression tests
+              uses: ./.github/actions/e2e-tests
+              with:
+                  smoke: 'false'

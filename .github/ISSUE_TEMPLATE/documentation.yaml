@@ -1,0 +1,51 @@
+name: 'Documentation / usage question'
+description: 'Report unclear or missing documentation, or ask a usage question'
+title: '[Docs]: '
+labels:
+    - documentation
+body:
+    - type: markdown
+      attributes:
+          value: |
+              Thanks for helping improve the documentation or asking about usage.
+
+              Please make sure your interactions follow our [Code of Conduct](https://github.com/dnd-mapp/admin-client/blob/main/CODE_OF_CONDUCT.md).
+    - type: dropdown
+      id: docs_area
+      attributes:
+          label: Area of documentation
+          options:
+              - Getting started
+              - Installation / setup
+              - Admin UI usage / features
+              - Angular project structure
+              - Scripts / pnpm commands
+              - Configuration
+              - Other (please describe)
+      validations:
+          required: true
+    - type: textarea
+      id: description
+      attributes:
+          label: What is unclear or missing?
+          description: |
+              Describe what you were trying to do and what you found confusing or missing.
+          placeholder: |
+              I was trying to...
+              I expected the docs to explain...
+      validations:
+          required: true
+    - type: textarea
+      id: suggestion
+      attributes:
+          label: Suggested improvement (optional)
+          description: |
+              If you already have an idea how to improve the docs, describe it here.
+          placeholder: |
+              It would help if the README included...
+              It would help if there was an example of how to...
+    - type: textarea
+      id: additional_context
+      attributes:
+          label: Additional context
+          description: Links, screenshots, or anything else that helps clarify your point.

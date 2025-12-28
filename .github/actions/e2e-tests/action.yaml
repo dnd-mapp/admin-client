@@ -1,0 +1,25 @@
+name: Run E2E Tests
+description: Runs E2E tests
+inputs:
+    smoke:
+        description: Determines whether to run only smoke tests or all (regression) tests
+        default: 'true'
+runs:
+    using: composite
+    steps:
+        - name: Set up tools
+          uses: ./.github/actions/setup-tools
+
+        - name: Install browsers
+          shell: bash
+          run: pnpm e2e:install-browsers
+
+        - name: Run smoke tests
+          if: ${{ inputs.smoke == 'true' }}
+          shell: bash
+          run: pnpm e2e --grep "@smoke"
+
+        - name: Run regression tests
+          if: ${{ inputs.smoke == 'false' }}
+          shell: bash
+          run: pnpm e2e

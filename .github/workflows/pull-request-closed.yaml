@@ -1,0 +1,32 @@
+name: Pull request closed
+on:
+    pull_request:
+        types:
+            - closed
+permissions:
+    contents: write
+jobs:
+    cleanup-docker-images:
+        name: Cleanup Docker images
+        runs-on: ubuntu-22.04
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+
+            - name: Cleanup Docker images
+              env:
+                  DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+                  DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+                  DOCKER_IMAGE: admin-client
+                  TAG: pr-${{ github.event.number }}
+              run: ./scripts/cleanup-pr-images.sh
+
+            - name: Trigger release
+              if: github.event.pull_request.merged == true && startsWith(github.event.pull_request.head.ref, 'release/v')
+              uses: peter-evans/repository-dispatch@28959ce8df70de7be546dd1250a005dd32156697 # v4.0.1
+              with:
+                  event-type: create-release
+                  client-payload: |-
+                      {
+                          "branch": "${{ steps.prepare.outputs.branch }}",
+                      }

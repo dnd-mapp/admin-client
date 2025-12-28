@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+    - name: Code of Conduct
+      url: https://github.com/dnd-mapp/admin-client/blob/main/CODE_OF_CONDUCT.md
+      about: Please read before participating in the project.

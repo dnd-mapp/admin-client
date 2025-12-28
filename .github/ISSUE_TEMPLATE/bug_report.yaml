@@ -1,0 +1,86 @@
+name: 'Bug report'
+description: 'Report a bug or regression in the Admin Client'
+title: '[Bug]: '
+labels:
+    - bug
+body:
+    - type: markdown
+      attributes:
+          value: |
+              Thanks for taking the time to report a bug in the `dnd-mapp/admin-client` (Admin Client / Admin UI).
+
+              Please make sure your interactions follow our [Code of Conduct](https://github.com/dnd-mapp/admin-client/blob/main/CODE_OF_CONDUCT.md).
+    - type: checkboxes
+      id: checklist
+      attributes:
+          label: Pre-checks
+          description: 'Please confirm you have done the following:'
+          options:
+              - label: I have searched existing issues to make sure this bug has not already been reported.
+                required: true
+              - label: I am using the latest version of `dnd-mapp/admin-client` (or have noted the version/commit below).
+                required: false
+    - type: input
+      id: app_version
+      attributes:
+          label: Admin Client version / commit
+          description: |
+              Which version/tag/commit of the Admin Client are you using? You can paste a commit hash, a tag (if any), or "main" if you just pulled it.
+          placeholder: e.g. main, v1.2.0, or 4a2b8c9
+    - type: input
+      id: angular_version
+      attributes:
+          label: Angular version (optional)
+          description: |
+              Which Angular version is the Admin Client using? (e.g. 21.0.6). If you are not sure, you can leave this blank.
+    - type: textarea
+      id: environment
+      attributes:
+          label: Environment
+          description: |
+              Describe your environment. This is especially helpful for debugging.
+          placeholder: |
+              - OS: e.g. Windows 11 / macOS 14 / Ubuntu 22.04
+              - Node.js version: e.g. 24.12.0
+              - Package manager: pnpm + version
+              - Browser(s): e.g. Chrome 121, Firefox 123
+              - Running via: local dev server / Docker / other
+      validations:
+          required: false
+    - type: textarea
+      id: description
+      attributes:
+          label: Bug description
+          description: What happened, and what did you expect to happen?
+          placeholder: |
+              A clear and concise description of the problem.
+              What is the current behavior?
+              What is the expected behavior?
+      validations:
+          required: true
+    - type: textarea
+      id: reproduction_steps
+      attributes:
+          label: Steps to reproduce
+          description: 'How can the maintainer reproduce this bug?'
+          placeholder: |
+              1. Start the Admin Client using ...
+              2. Navigate to ...
+              3. Click on ...
+              4. Observe ...
+          render: markdown
+      validations:
+          required: true
+    - type: textarea
+      id: logs
+      attributes:
+          label: Relevant logs or screenshots
+          description: |
+              Please paste any relevant console logs or CLI output.
+              If possible, wrap logs in triple backticks (```).
+          render: shell
+    - type: textarea
+      id: additional_context
+      attributes:
+          label: Additional context
+          description: Add any other context, links, or information that might be useful.

@@ -1,0 +1,14 @@
+*
+
+!.docker/default.conf
+!.docker/README.md
+
+!build/
+!public/
+!src/
+
+!angular.json
+!package.json
+!pnpm-lock.yaml
+!tsconfig*.json
+!LICENSE
