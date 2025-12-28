@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 # check=error=true
 
-FROM --platform=$BUILDPLATFORM dhi.io/node:24.12.0-dev AS build
+FROM --platform=$BUILDPLATFORM dhi.io/node:25.2.1-dev AS build
 
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
